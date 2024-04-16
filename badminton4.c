@@ -6,7 +6,7 @@ int main(int argc, char** argv) {
     const int PING_PONG_LIMIT = 16;
 
     // Initialize the MPI environment
-    MPI_Init(NULL, NULL);
+    MPI_Init(&argc, &argv);
 
     // Find out rank, size
     int world_rank, world_size;
@@ -24,10 +24,10 @@ int main(int argc, char** argv) {
     int partner_rank = (world_rank + 1) % 4;
     while (ping_pong_count < PING_PONG_LIMIT) {
         if (world_rank == ping_pong_count % 4) {
-            ping_pong_count++;
             MPI_Send(&ping_pong_count, 1, MPI_INT, partner_rank, 0, MPI_COMM_WORLD);
-            printf("P%d sent and incremented ping_pong_count %d to P%d\n",
+            printf("P%d sent ping_pong_count %d to P%d\n",
                    world_rank, ping_pong_count, partner_rank);
+            ping_pong_count++;
         } else {
             MPI_Recv(&ping_pong_count, 1, MPI_INT, (world_rank == 0 ? 3 : world_rank - 1), 0, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
             printf("P%d received ping_pong_count %d from P%d\n",
@@ -36,4 +36,5 @@ int main(int argc, char** argv) {
     }
 
     MPI_Finalize();
+    return 0;
 }
