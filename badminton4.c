@@ -28,7 +28,6 @@ int main(int argc, char** argv) {
             MPI_Recv(&ping_pong_count, 1, MPI_INT, MPI_ANY_SOURCE, 0, MPI_COMM_WORLD, &status);
             printf("P%d received ping_pong_count %d from P%d\n",
                    world_rank, ping_pong_count, status.MPI_SOURCE);
-            }
         } else {
             MPI_Recv(&ping_pong_count, 1, MPI_INT, (world_rank == 0 ? 3 : world_rank - 1), 0, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
             printf("P%d received ping_pong_count %d from P%d\n",
